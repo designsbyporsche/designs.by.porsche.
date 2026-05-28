@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design by Porsche | Precision Design. Timeless Interiors.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        'porsche-black': '#0a0a0a',
+                        'porsche-charcoal': '#1a1a1a',
+                        'porsche-graphite': '#2d2d2d',
+                        'porsche-cream': '#f5f0e8',
+                        'porsche-gold': '#c9a96e',
+                        'porsche-silver': '#8a8a8a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #f5f0e8;
+            overflow-x: hidden;
+        }
+        
+        .text-reveal {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        
+        .line-draw {
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .line-draw.active {
+            width: 100%;
+        }
+        
+        .image-reveal {
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        .image-reveal.active {
+            clip-path: inset(0 0 0 0);
+        }
+        
+        .hover-lift {
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.6s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .cursor-follow {
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(201, 169, 110, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cursor-follow.hover {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(201, 169, 110, 0.9);
+            background: rgba(201, 169, 110, 0.05);
+        }
+        
+        .parallax-img {
+            will-change: transform;
+        }
+        
+        .service-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 1px solid rgba(201, 169, 110, 0.1);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .service-card:hover {
+            border-color: rgba(201, 169, 110, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        
+        .service-card .service-icon {
+            transition: all 0.5s ease;
+        }
+        
+        .service-card:hover .service-icon {
+            color: #c9a96e;
+            transform: scale(1.1);
+        }
+        
+        .testimonial-track {
+            animation: scroll 50s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .testimonial-track:hover {
+            animation-play-state: paused;
+        }
+        
+        .number-stroke {
+            -webkit-text-stroke: 1px rgba(201, 169, 110, 0.3);
+            color: transparent;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #c9a96e;
+        }
+        
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-line {
+            width: 0;
+            height: 1px;
+            background: #c9a96e;
+            animation: load 2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        
+        @keyframes load {
+            to { width: 200px; }
+        }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            background: #25D366;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.4);
+        }
+
+        .business-hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .business-hours-row:last-child {
+            border-bottom: none;
+        }
+
+        .about-img-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-img-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(201, 169, 110, 0.3);
+            z-index: -1;
+        }
+
+        .testimonial-card {
+            width: 420px;
+            flex-shrink: 0;
+            background: #0a0a0a;
+            border: 1px solid #2d2d2d;
+            padding: 2rem;
+            white-space: normal;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: #f5f0e8;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(201, 169, 110, 0.15);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-porsche-gold selection:text-porsche-black">
+    <!-- Grain Overlay -->
+    <div class="grain"></div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-follow hidden md:block" id="cursor"></div>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/27785803872" target="_blank" class="whatsapp-btn group">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span class="hidden md:inline">Chat on WhatsApp</span>
+        <span class="md:hidden">WhatsApp</span>
+    </a>
+    
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="flex flex-col items-center gap-4">
+            <span class="font-serif text-2xl tracking-widest text-porsche-gold">DESIGN BY PORSCHE</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-500 py-6">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+                  <img 
+        src="logo.png" 
+         alt="Porsche Interior Designer"
+        class="w-10 h-10">
+                    <a href="logo.png" class="font-serif text-xl md:text-2xl tracking-[0.15em] text-porsche-cream hover:text-porsche-gold transition-colors duration-300">
+                DESIGN BY PORSCHE
+            </a>
+            
+            <div class="hidden md:flex items-center gap-12">
+                <a href="#about" class="text-xs tracking-[0.2em] uppercase text-porsche-silver hover:text-porsche-cream transition-colors duration-300">About</a>
+                <a href="#collections" class="text-xs tracking-[0.2em] uppercase text-porsche-silver hover:text-porsche-cream transition-colors duration-300">Collections</a>
+                <a href="#services" class="text-xs tracking-[0.2em] uppercase text-porsche-silver hover:text-porsche-cream transition-colors duration-300">Services</a>
+                <a href="#contact" class="text-xs tracking-[0.2em] uppercase text-porsche-silver hover:text-porsche-cream transition-colors duration-300">Contact</a>
+            </div>
+            
+            <button id="menuBtn" class="md:hidden text-porsche-cream">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 bg-porsche-black z-40 transform translate-x-full transition-transform duration-700 ease-in-out md:hidden">
+        <div class="flex flex-col items-center justify-center h-full gap-8">
+            <a href="#collections" class="font-serif text-3xl text-porsche-cream mobile-link">Collections</a>
+            <a href="#services" class="font-serif text-3xl text-porsche-cream mobile-link">Services</a>
+            <a href="#contact" class="font-serif text-3xl text-porsche-cream mobile-link">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full overflow-hidden flex items-center">
+        <div class="absolute inset-0 z-0">
+            <video src="video.mp4" 
+                   alt="Luxury Interior" 
+                   class="w-full h-full object-cover opacity-60 scale-110 parallax-img"
+                   id="heroImage" autoplay muted loop>
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-b from-porsche-black/40 via-transparent to-porsche-black"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full pt-20">
+            <div class="max-w-4xl">
+                <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-6 opacity-0 translate-y-4" id="heroLabel">
+                    Bespoke Interior Design
+                </p>
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-porsche-cream leading-[0.95] mb-8">
+                    <span class="block overflow-hidden">
+                        <span class="block transform translate-y-full" id="heroLine1">Precision Design</span>
+                    </span>
+                    <span class="block overflow-hidden">
+                        <span class="block transform translate-y-full italic text-porsche-gold" id="heroLine2">Timeless Interiors</span>
+                    </span>
+                </h1>
+                <p class="text-porsche-silver text-lg md:text-xl max-w-xl mb-12 leading-relaxed opacity-0" id="heroSub">
+                    Bespoke spaces engineered for those who demand excellence. Where architecture meets artistry.
+                </p>
+                <div class="opacity-0" id="heroCta">
+                    <a href="#collections" class="group inline-flex items-center gap-4 text-porsche-cream border border-porsche-cream/30 px-8 py-4 hover:bg-porsche-cream hover:text-porsche-black transition-all duration-500">
+                        <span class="text-xs tracking-[0.2em] uppercase">Explore Our Collections</span>
+                        <svg class="w-4 h-4 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-12 left-6 lg:left-8 z-10">
+            <div class="flex items-center gap-4 text-porsche-silver text-xs tracking-widest">
+                <span>Scroll</span>
+                <div class="w-12 h-px bg-porsche-silver/50"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative py-32 md:py-48 bg-porsche-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <div class="order-2 lg:order-1">
+                    <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-6 reveal-text">About Us</p>
+                    <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-porsche-cream leading-tight mb-8 reveal-text">
+                        Creating homes with<br><span class="italic text-porsche-gold">heart & precision</span>
+                    </h2>
+                    <div class="w-24 h-px bg-porsche-gold mb-8 line-draw"></div>
+                    
+                    <div class="space-y-6 text-porsche-silver text-lg leading-relaxed mb-12 reveal-text">
+                        <p>
+                            I am <span class="text-porsche-cream font-medium">Portia</span>, originally from Katlehong, with a professional background in the finance sector, where I specialised in credit and collections. While I have always valued detail and excellent customer service, my true passion lies in creating beautiful, warm homes.
+                        </p>
+                        <p>
+                            My journey into interior design began after a disappointing renovation experience. I realised there was a need for change in how homeowners are treated and in the quality of service they receive. That's why I founded <span class="text-porsche-cream font-medium">Designs by Porsche</span> — to bring homeowners not only classy, timeless designs but also the exceptional service they truly deserve.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="reveal-text">
+                            <span class="font-serif text-5xl md:text-6xl text-porsche-gold block mb-2">100+</span>
+                            <span class="text-xs tracking-widest uppercase text-porsche-silver">Projects Completed</span>
+                        </div>
+                        <div class="reveal-text">
+                            <span class="font-serif text-5xl md:text-6xl text-porsche-gold block mb-2">5+</span>
+                            <span class="text-xs tracking-widest uppercase text-porsche-silver">Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2 relative about-img-container">
+                    <div class="aspect-[3/4] overflow-hidden bg-porsche-charcoal">
+                        <img src="about.jpg" 
+                             alt="Portia - Founder of Design by Porsche" 
+                             class="w-full h-full object-cover object-top image-reveal grayscale hover:grayscale-0 transition-all duration-700"
+                             id="aboutImg">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 border border-porsche-gold/30 -z-10"></div>
+                    <div class="absolute -top-6 -right-6 w-24 h-24 border border-porsche-gold/20 -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section id="collections" class="relative py-32 bg-porsche-charcoal">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+                <div>
+                    <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-4">Portfolio</p>
+                    <h2 class="font-serif text-4xl md:text-5xl text-porsche-cream">Featured Collections</h2>
+                </div>
+                <div class="flex gap-4">
+                    <button class="filter-btn active text-xs tracking-widest uppercase px-6 py-2 border border-porsche-gold bg-porsche-gold text-porsche-black transition-all" data-filter="all">All</button>
+                    <button class="filter-btn text-xs tracking-widest uppercase px-6 py-2 border border-porsche-cream/30 text-porsche-cream hover:border-porsche-gold hover:text-porsche-gold transition-all" data-filter="2025">2025</button>
+                    <button class="filter-btn text-xs tracking-widest uppercase px-6 py-2 border border-porsche-cream/30 text-porsche-cream hover:border-porsche-gold hover:text-porsche-gold transition-all" data-filter="2026">2026</button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolioGrid">
+                <!-- Project 1 -->
+                <div class="group cursor-pointer portfolio-item" data-category="residential">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image1.jpg" 
+                             alt="Penthouse Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>   
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Modern Living Room</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Johannesburg</p>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group cursor-pointer portfolio-item" data-category="commercial">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image2.jpg" 
+                             alt="Office Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Elegant Living Room</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Pretoria</p>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group cursor-pointer portfolio-item" data-category="residential">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image3.jpg" 
+                             alt="Villa Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Modern Living Room</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Cape Town</p>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="group cursor-pointer portfolio-item" data-category="commercial">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image4.jpg" 
+                             alt="Boutique Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1"> Boutique Kitchen</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Sandton </p>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="group cursor-pointer portfolio-item" data-category="residential">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image5.jpg" 
+                             alt="Loft Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Modern Kitchen</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Durban</p>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="group cursor-pointer portfolio-item" data-category="commercial">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image6.jpg" 
+                             alt="Gallery Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Elegant Kitchen</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Stellenbosch</p>
+                </div>
+                                <!-- Project 7 -->
+                <div class="group cursor-pointer portfolio-item" data-category="commercial">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image7.jpg" 
+                             alt="Boutique Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Modern Room Divider</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Bloemfontein</p>
+                </div>
+
+                <!-- Project 8 -->
+                <div class="group cursor-pointer portfolio-item" data-category="residential">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image8.jpg" 
+                             alt="Loft Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Mirror Room Divider</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Umhlanga</p>
+                </div>
+
+                <!-- Project 9 -->
+                <div class="group cursor-pointer portfolio-item" data-category="commercial">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 relative">
+                        <img src="image9.jpg" 
+                             alt="Gallery Project" 
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-porsche-black/0 group-hover:bg-porsche-black/30 transition-colors duration-500"></div>
+                        <div class="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <span class="text-porsche-gold text-xs tracking-widest uppercase">View Project</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif text-xl text-porsche-cream mb-1">Walking Closet</h3>
+                    <p class="text-porsche-silver text-sm">Residential • Centurion</p>
+                </div>
+            </div>
+                 <div class="text-center mt-12"><a href="https://www.tiktok.com/@porschedesigns1" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-8 py-4 font-medium text-sm tracking-wider uppercase border-2 transition-all duration-300 hover:bg-opacity-10" style="border-color: var(--color-charcoal); color: var(--color-charcoal);">
+       <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+       </svg> See More on TikTok </a>
+     </div>
+    </div>
+        </div>
+        </section>
+
+    <!-- Services Section -->
+    <section id="services" class="relative py-32 bg-porsche-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-4">What We Do</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-porsche-cream">Our Services</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Service 1: Full House Design -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Full House Design</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Complete home transformation from concept to completion, tailored to your lifestyle and preferences.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Service 2: Kitchen Renovations -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Kitchen Renovations</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Modern kitchen designs with premium appliances, smart storage, and beautiful finishes.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Service 3: Living Room Design -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Living Room Design</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Comfortable and stylish living spaces that reflect your personality and accommodate your family.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Service 4: Bedroom Suites -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Bedroom Suites</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Peaceful bedroom retreats with luxury furnishings and personalized touches for ultimate comfort.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Service 5: Custom Furniture -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Custom Furniture</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Bespoke furniture pieces designed and crafted specifically for your space and needs.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Service 6: Design Consultation -->
+                <div class="service-card group p-8 md:p-10 cursor-pointer min-h-[320px] flex flex-col">
+                    <div class="service-icon text-porsche-silver mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-porsche-cream mb-4">Design Consultation</h3>
+                    <p class="text-porsche-silver text-sm leading-relaxed flex-grow">Professional design advice and planning to help you make the best decisions for your home.</p>
+                    <div class="mt-6 pt-4 border-t border-porsche-graphite">
+                        <span class="text-porsche-gold text-xs tracking-widest uppercase group-hover:tracking-[0.2em] transition-all">Learn More</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="relative py-32 bg-porsche-charcoal overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 mb-16">
+            <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-4">Testimonials</p>
+            <h2 class="font-serif text-4xl md:text-5xl text-porsche-cream">Client Perspectives</h2>
+        </div>
+
+        <div class="relative overflow-hidden">
+            <div class="testimonial-track flex gap-6 whitespace-nowrap px-6">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"Porsche transformed our kitchen beyond our wildest dreams. Her attention to detail and customer service is exceptional. We couldn't be happier!"</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">AR</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Siphokazi M.</p>
+                            <p class="text-porsche-silver text-xs">Johannesburg</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"Professional, reliable, and incredibly talented. Porsche redesigned our entire living room and it's now the heart of our home. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">SC</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Bandile K.</p>
+                            <p class="text-porsche-silver text-xs">Pretoria</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"From consultation to completion, the service was outstanding. Our bedroom is now a luxurious retreat. Thank you, Porsche!"</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">MV</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Nyakallo T.</p>
+                            <p class="text-porsche-silver text-xs">Sandton</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 4 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"The team's dedication to craftsmanship is unmatched. They transformed our boutique into a true destination. Guests constantly ask about the design."</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">EL</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Emilie Laurent</p>
+                            <p class="text-porsche-silver text-xs">Benoni</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate for seamless loop -->
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"They understood our vision before we could articulate it. The result is a home that feels both timeless and deeply personal. Every detail was considered with such care."</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">AR</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Alexander Rothschild</p>
+                            <p class="text-porsche-silver text-xs">Private Residence, Geneva</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"Precision in every detail. Our headquarters now reflects the excellence we demand in every aspect of our business. The team delivered beyond expectations."</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">SC</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Sarah Chen</p>
+                            <p class="text-porsche-silver text-xs">CEO, Meridian Capital</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"An extraordinary ability to balance bold statements with subtle elegance. Every room reveals new layers of beauty. We couldn't be happier with the transformation."</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">MV</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Marcus Vance</p>
+                            <p class="text-porsche-silver text-xs">Villa Project, Marbella</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"The team's dedication to craftsmanship is unmatched. They transformed our boutique into a true destination. Guests constantly ask about the design."</p>
+                    <div class="testimonial-author">
+                        <div class="w-10 h-10 bg-porsche-graphite rounded-full flex items-center justify-center text-porsche-gold font-serif text-sm">EL</div>
+                        <div>
+                            <p class="text-porsche-cream text-sm font-medium">Emilie Laurent</p>
+                            <p class="text-porsche-silver text-xs">Velvet Hotel, Paris</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative py-32 bg-porsche-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
+                <div>
+                    <p class="text-porsche-gold text-xs tracking-[0.3em] uppercase mb-6">Begin Your Project</p>
+                    <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-porsche-cream leading-tight mb-8">
+                        Let's create something<br><span class="italic text-porsche-gold">extraordinary</span>
+                    </h2>
+                    <p class="text-porsche-silver text-lg leading-relaxed mb-12">
+                        We accept a limited number of commissions each year to ensure unparalleled attention to every project. Reach out to discuss your vision.
+                    </p>
+                    
+                    <div class="space-y-8">
+                        <!-- Email -->
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 border border-porsche-gold/30 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-porsche-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-porsche-cream text-sm font-medium mb-1">Email</p>
+                                <a href="mailto:info@designbyporsche.co.za" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">info@designbyporsche.co.za</a>
+                            </div>
+                        </div>
+                        
+                        <!-- WhatsApp -->
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 border border-porsche-gold/30 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-porsche-gold" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-porsche-cream text-sm font-medium mb-1">WhatsApp</p>
+                                <a href="https://wa.me/27785803872" target="_blank" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">078 580 3872 &bull; Tap to chat</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Business Hours -->
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 border border-porsche-gold/30 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-porsche-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-porsche-cream text-sm font-medium mb-3">Business Hours</p>
+                                <div class="business-hours-row">
+                                    <span class="text-porsche-silver text-sm">Monday - Friday</span>
+                                    <span class="text-porsche-cream text-sm">8 AM - 7 PM</span>
+                                </div>
+                                <div class="business-hours-row">
+                                    <span class="text-porsche-silver text-sm">Saturday</span>
+                                    <span class="text-porsche-cream text-sm">8 AM - 1 PM</span>
+                                </div>
+                                <div class="business-hours-row">
+                                    <span class="text-porsche-silver text-sm">Sunday</span>
+                                    <span class="text-porsche-gold text-sm">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TikTok -->
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 border border-porsche-gold/30 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-porsche-gold" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.88-2.89 2.89 2.89 0 012.88-2.89c.27 0 .53.04.78.11V9.4a6.23 6.23 0 00-.78-.05A6.34 6.34 0 003.11 15.7a6.34 6.34 0 006.33 6.34 6.34 6.34 0 006.33-6.34V8.83a8.45 8.45 0 004.83 1.53V6.82a4.85 4.85 0 01-1.01-.13z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-porsche-cream text-sm font-medium mb-1">TikTok</p>
+                                <a href="https://tiktok.com/@porschedesigns1" target="_blank" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">@porschedesigns1 &bull; Follow for inspiration</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-porsche-charcoal p-8 md:p-12 border border-porsche-graphite">
+       <form id="contactForm" onsubmit="handleFormSubmit(event)">
+        <div class="space-y-6">
+         <div><label for="name" class="block text-sm font-medium mb-2" style="color: var(--color-charcoal);">Full Name</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 border rounded-sm focus:outline-none focus:ring-2 transition-all" style="border-color: var(--color-soft-taupe); background: var(--color-warm-white);" placeholder="Your name">
+         </div>
+         <div><label for="email" class="block text-sm font-medium mb-2" style="color: var(--color-charcoal);">Email Address</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 border rounded-sm focus:outline-none focus:ring-2 transition-all" style="border-color: var(--color-soft-taupe); background: var(--color-warm-white);" placeholder="your@email.com">
+         </div>
+         <div><label for="phone" class="block text-sm font-medium mb-2" style="color: var(--color-charcoal);">Phone Number</label> <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border rounded-sm focus:outline-none focus:ring-2 transition-all" style="border-color: var(--color-soft-taupe); background: var(--color-warm-white);" placeholder="Your phone number">
+         </div>
+         <div><label for="service" class="block text-sm font-medium mb-2" style="color: var(--color-charcoal);">Service Interested In</label> <select id="service" name="service" class="w-full px-4 py-3 border rounded-sm focus:outline-none focus:ring-2 transition-all" style="border-color: var(--color-soft-taupe); background: var(--color-warm-white);"> <option value="">Select a service</option> <option value="full-house">Full House Design</option> <option value="kitchen">Kitchen Renovations</option> <option value="living-room">Living Room Design</option> <option value="bedroom">Bedroom Suites</option> <option value="furniture">Custom Furniture</option> <option value="consultation">Design Consultation</option> </select>
+         </div>
+         <div><label for="message" class="block text-sm font-medium mb-2" style="color: var(--color-charcoal);">Your Message</label> <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 border rounded-sm focus:outline-none focus:ring-2 transition-all resize-none" style="border-color: var(--color-soft-taupe); background: var(--color-warm-white);" placeholder="Tell me about your project..."></textarea>
+         </div><button type="submit" id="submitBtn" class="w-full py-4 font-medium text-sm tracking-wider uppercase transition-all duration-300 hover:opacity-90" style="background: var(--color-charcoal); color: var(--color-warm-white);"> Send Message </button>
+        </div>
+       </form>
+                           <div id="formSuccess" class="hidden text-center py-8">
+        <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="#C9A96E" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="font-display text-2xl mb-2" style="color: var(--color-charcoal);">Message Sent!</h3>
+        <p class="font-light" style="color: var(--color-soft-taupe);">Thank you for reaching out. I'll get back to you soon!</p><a href="https://wa.me/27785803872?text=Hello%20Porsche,%20I%20just%20submitted%20a%20contact%20form%20and%20wanted%20to%20connect%20directly." target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-4 px-6 py-3 text-sm font-medium transition-all duration-300" style="background: #25D366; color: white; border-radius: 4px;">
+         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+         </svg> Continue on WhatsApp </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-porsche-black border-t border-porsche-graphite py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="md:col-span-2">
+                    <a href="#" class="font-serif text-2xl tracking-[0.15em] text-porsche-cream mb-6 block">DESIGN BY PORSCHE</a>
+                    <p class="text-porsche-silver text-sm leading-relaxed max-w-md">
+                        Precision design for discerning clients. Creating timeless interiors that transcend trends and define generations.
+                    </p>
+                          <img 
+       src="logo.png" 
+       alt="Porsche Interior Designer"
+       class="w-20 h-20"                                
+    />
+                </div>
+                <div>
+                    <p class="text-porsche-cream text-xs tracking-widest uppercase mb-6">Navigation</p>
+                    <ul class="space-y-3">
+                        <li><a href="#collections" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">Collections</a></li>
+                        <li><a href="#about" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">About</a></li>
+                        <li><a href="#services" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">Services</a></li>
+                        <li><a href="#contact" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <p class="text-porsche-cream text-xs tracking-widest uppercase mb-6">Connect</p>
+                    <ul class="space-y-3">
+                        <li><a href="https://wa.me/27785803872" target="_blank" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">WhatsApp</a></li>
+                        <li><a href="https://tiktok.com/@porschedesigns1" target="_blank" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">TikTok</a></li>
+                        <li><a href="mailto:info@designbyporsche.co.za" class="text-porsche-silver text-sm hover:text-porsche-gold transition-colors">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-porsche-graphite">
+                   <p> © 2025 Design by Porsche. All rights reserved.</p>
+    <p style="font-size:14px;"> Website by <a href="https://www.casadililly.co.za/" 
+        style="color:#d4af37;text-decoration:none;">Case di lilly</a>
+     </p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="text-porsche-silver/60 text-xs hover:text-porsche-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-porsche-silver/60 text-xs hover:text-porsche-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                initAnimations();
+            }, 2200);
+        });
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+
+        if (!isTouchDevice && cursor) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            document.querySelectorAll('a, button, .portfolio-item, .service-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+        // Navigation scroll effect
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('nav-blur', 'bg-porsche-black/80', 'py-4');
+                navbar.classList.remove('py-6');
+            } else {
+                navbar.classList.remove('nav-blur', 'bg-porsche-black/80', 'py-4');
+                navbar.classList.add('py-6');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let menuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+            }
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        // GSAP Animations
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Animations
+            gsap.to('#heroLabel', { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out' });
+            gsap.to('#heroLine1', { y: 0, duration: 1.2, delay: 0.4, ease: 'power3.out' });
+            gsap.to('#heroLine2', { y: 0, duration: 1.2, delay: 0.6, ease: 'power3.out' });
+            gsap.to('#heroSub', { opacity: 1, duration: 1, delay: 0.8, ease: 'power3.out' });
+            gsap.to('#heroCta', { opacity: 1, duration: 1, delay: 1, ease: 'power3.out' });
+
+            // Parallax Hero Image
+            gsap.to('#heroImage', {
+                yPercent: 20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: 'section:first-of-type',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+
+            // About Section
+            ScrollTrigger.create({
+                trigger: '#about',
+                start: 'top 80%',
+                onEnter: () => {
+                    document.querySelectorAll('#about .reveal-text').forEach((el, i) => {
+                        gsap.to(el, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.1, ease: 'power3.out' });
+                    });
+                    document.querySelector('#about .line-draw').classList.add('active');
+                    document.getElementById('aboutImg').classList.add('active');
+                },
+                once: true
+            });
+
+            // Portfolio Items
+            gsap.utils.toArray('.portfolio-item').forEach((item, i) => {
+                gsap.from(item, {
+                    y: 60,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 85%',
+                        once: true
+                    }
+                });
+            });
+
+            // Service Cards
+            gsap.utils.toArray('.service-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        once: true
+                    }
+                });
+            });
+        }
+
+        // Portfolio Filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-porsche-gold', 'text-porsche-black', 'border-porsche-gold');
+                    b.classList.add('text-porsche-cream', 'border-porsche-cream/30');
+                });
+                btn.classList.add('active', 'bg-porsche-gold', 'text-porsche-black', 'border-porsche-gold');
+                btn.classList.remove('text-porsche-cream', 'border-porsche-cream/30');
+
+                const filter = btn.getAttribute('data-filter');
+
+                portfolioItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        gsap.to(item, { opacity: 1, scale: 1, duration: 0.4, display: 'block' });
+                    } else {
+                        gsap.to(item, { opacity: 0, scale: 0.9, duration: 0.4, display: 'none' });
+                    }
+                });
+            });
+        });
+
+        // Form Handling
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<span>Message Sent</span>';
+            btn.classList.add('bg-porsche-gold');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-porsche-gold');
+                e.target.reset();
+            }, 3000);
+        });
+
+        // Smooth Scroll for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+       function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const service = document.getElementById('service').value;
+      const message = document.getElementById('message').value;
+      
+      const serviceName = service ? document.querySelector(`#service option[value="${service}"]`).textContent : 'Not specified';
+      
+      let whatsappMessage = `Hello Porsche, my name is ${name}.\n\n`;
+      whatsappMessage += `📧 Email: ${email}\n`;
+      if (phone) whatsappMessage += `📱 Phone: ${phone}\n`;
+      whatsappMessage += `🏠 Service Interested In: ${serviceName}\n\n`;
+      whatsappMessage += `Message:\n${message}`;
+      
+      const encodedMessage = encodeURIComponent(whatsappMessage);
+      const whatsappUrl = `https://wa.me/27785803872?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+      
+      const form = document.getElementById('contactForm');
+      const successMsg = document.getElementById('formSuccess');
+      
+      setTimeout(() => {
+        form.style.display = 'none';
+        successMsg.classList.remove('hidden');
+      }, 500);
+    }
+
+    </script>
+</body>
+</html>
